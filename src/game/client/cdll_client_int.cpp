@@ -106,13 +106,9 @@
 #ifdef GAMEUI_UISYSTEM2_ENABLED
 #include "gameui.h"
 #endif
-#ifdef GAMEUI_EMBEDDED
 
-#if defined( SWARM_DLL )
-#include "swarm/gameui/swarm/basemodpanel.h"
-#else
-#error "GAMEUI_EMBEDDED"
-#endif
+#ifdef GAMEUI_EMBEDDED
+#include "basemodpanel.h"
 #endif
 
 #ifdef DEMOPOLISH_ENABLED
@@ -125,15 +121,12 @@
 #include "c_rumble.h"
 #include "viewpostprocess.h"
 
-
-
 #ifdef INFESTED_PARTICLES
 #include "c_asw_generic_emitter.h"
 #endif
 
 #ifdef INFESTED_DLL
 #include "missionchooser/iasw_mission_chooser.h"
-
 #endif
 
 #include "tier1/UtlDict.h"

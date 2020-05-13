@@ -133,8 +133,8 @@ public:
 	virtual void	AvoidPhysicsProps( CUserCmd *pCmd );
 	
 	virtual void	PlayerUse( void );
-	CBaseEntity		*FindUseEntity( void );
-	virtual bool	IsUseableEntity( CBaseEntity *pEntity, unsigned int requiredCaps );
+	C_BaseEntity	*FindUseEntity( void );
+	virtual bool	IsUseableEntity( C_BaseEntity *pEntity, unsigned int requiredCaps );
 
 	// Data handlers
 	virtual bool	IsPlayer( void ) const { return true; }
@@ -180,9 +180,9 @@ public:
 	virtual void	TeamChange( int iNewTeam );
 
 	// Flashlight
-	void	Flashlight( void );
-	void	UpdateFlashlight( void );
-	void	TurnOffFlashlight( void );	// TERROR
+	virtual void	Flashlight( void );
+	virtual void	UpdateFlashlight( void );
+	virtual void	TurnOffFlashlight( void );	// TERROR
 	virtual const char *GetFlashlightTextureName( void ) const { return NULL; } // TERROR
 	virtual float GetFlashlightFOV( void ) const { return 0.0f; } // TERROR
 	virtual float GetFlashlightFarZ( void ) const { return 0.0f; } // TERROR

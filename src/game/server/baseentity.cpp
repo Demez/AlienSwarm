@@ -5423,7 +5423,9 @@ void CBaseEntity::PrecacheModelComponents( int nModelIndex )
 		}
 	}
 }
-		
+
+// Game crashes on Precache? Turn it on and see what model cause it. [str]
+ConVar sv_modelprecache_debug( "sv_modelprecache_debug", "1", FCVAR_CHEAT ); 
 //-----------------------------------------------------------------------------
 // Purpose: Add model to level precache list
 // Input  : *name - model name
@@ -5453,10 +5455,42 @@ int CBaseEntity::PrecacheModel( const char *name )
 	}
 #endif
 
-	int idx = engine->PrecacheModel( name, true );
+	// Fix up old models
+	int idx = -1;
+	if ( sv_modelprecache_debug.GetBool() )
+	{
+		Msg( " !! CBaseEntity::PrecacheModel : (pre) modelinfo->PrecacheModel %s \n", name );
+	}
+	
+	idx = engine->PrecacheModel( name, true ); // Precache is giving model an index.
+
+	if ( sv_modelprecache_debug.GetBool() )
+	{
+		Msg( " !! CBaseEntity::PrecacheModel : (post) modelinfo->PrecacheModel %s, index: %i \n", name, idx );
+	}
 	if ( idx != -1 )
 	{
-		PrecacheModelComponents( idx );
+		const model_t *model = modelinfo->GetModel( idx );
+		if ( model )
+		{
+			studiohdr_t *pStudioHdr = modelinfo->GetStudiomodel( model );
+			if ( pStudioHdr )
+			{
+				if ( !Studio_ConvertStudioHdrToNewVersion( pStudioHdr ) ) // Conversion itself
+				{
+					Warning( "Unable to convert %s\n", name );
+					//return -1;
+				}
+				else 
+				{
+					PrecacheModelComponents( idx ); // Conversion done, precaching what's left of model.
+					if ( sv_modelprecache_debug.GetBool() )
+					{
+						Msg( " !! CBaseEntity::PrecacheModel : PrecacheModelComponents \n" );
+					}
+				}
+			}
+		}
 	}
 
 #if defined( WATCHACCESS )

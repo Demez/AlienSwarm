@@ -292,9 +292,16 @@ static void RagdollCreateObjects( IPhysicsEnvironment *pPhysEnv, ragdoll_t &ragd
 	memset( ragdoll.list, 0, sizeof(ragdoll.list) );
 	memset( &ragdoll.animfriction, 0, sizeof(ragdoll.animfriction) );
 	
-	if ( !params.pCollide || params.pCollide->solidCount > RAGDOLL_MAX_ELEMENTS )
+	if ( !params.pCollide )
 	{
-		Warning( "Ragdoll solid count %d exceeds maximum limit of %d - Ragdoll not created", params.pCollide->solidCount, RAGDOLL_MAX_ELEMENTS );
+		Warning( "Ragdoll has no pCollide param - Ragdoll not created"/*, params.pCollide->solidCount, RAGDOLL_MAX_ELEMENTS*/ );
+		Assert( false );
+		return;
+	}
+	
+	if ( params.pCollide->solidCount > RAGDOLL_MAX_ELEMENTS )
+	{
+		Warning( "Ragdoll solid count d exceeds maximum limit of d - Ragdoll not created"/*, params.pCollide->solidCount, RAGDOLL_MAX_ELEMENTS*/ );
 		Assert( false );
 		return;
 	}
@@ -757,6 +764,10 @@ bool ShouldRemoveThisRagdoll( CBaseAnimating *pRagdoll )
 	if ( pRagdoll->GetEffectEntity() )
 		return false;
 	*/
+
+	// Bail if we have a null ragdoll pointer.
+	if (!pRagdoll->m_pRagdoll)
+		return true;
 
 	Vector vMins, vMaxs;
 		
